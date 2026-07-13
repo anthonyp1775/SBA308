@@ -15,6 +15,14 @@ const AssignmentGroup = {
   ]
 };
 
+const LearnerSubmissions = [
+  { learner_id: 125, assignment_id: 1, submission: { submitted_at: "2023-01-25", score: 47 } },
+  { learner_id: 125, assignment_id: 2, submission: { submitted_at: "2023-02-12", score: 150 } },
+  { learner_id: 125, assignment_id: 3, submission: { submitted_at: "2023-01-25", score: 400 } },
+  { learner_id: 132, assignment_id: 1, submission: { submitted_at: "2023-01-24", score: 39 } },
+  { learner_id: 132, assignment_id: 2, submission: { submitted_at: "2023-03-07", score: 140 } }
+];
+
 function validateCourseGroup(course, ag) {
   console.log(`Checking: AssignmentGroup.course_id (${ag.course_id}) vs CourseInfo.id (${course.id})`);
  
@@ -140,3 +148,7 @@ function getLearnerData(course, ag, submissions) {
     return [];
   }
 }
+ 
+const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+
+console.log(result);
