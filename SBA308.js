@@ -15,3 +15,16 @@ const AssignmentGroup = {
   ]
 };
 
+function validateCourseGroup(course, ag) {
+  console.log(`Checking: AssignmentGroup.course_id (${ag.course_id}) vs CourseInfo.id (${course.id})`);
+ 
+  if (typeof course.id !== "number" || typeof ag.course_id !== "number") {
+    throw new Error("Course ID and AssignmentGroup course_id must be numbers.");
+  }
+  if (ag.course_id !== course.id) {
+    throw new Error(
+      `Invalid input: AssignmentGroup ${ag.id} does not belong to course ${course.id}.`
+    );
+  }
+  console.log("Validation passed — the assignment group belongs to this course.");
+}
