@@ -46,3 +46,10 @@ function buildAssignmentMap(assignments) {
   return map;
 }
  
+function isNotYetDue(assignment, now = new Date()) {
+  return new Date(assignment.due_at) > now;
+}
+ 
+function isLate(submission, assignment) {
+  return new Date(submission.submitted_at) > new Date(assignment.due_at);
+}
