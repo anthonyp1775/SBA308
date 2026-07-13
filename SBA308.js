@@ -128,3 +128,15 @@ function formatResults(learners) {
   }
   return results;
 }
+
+function getLearnerData(course, ag, submissions) {
+  try {
+    validateCourseGroup(course, ag);
+    const assignmentMap = buildAssignmentMap(ag.assignments);
+    const learners = processSubmissions(submissions, assignmentMap);
+    return formatResults(learners);
+  } catch (error) {
+    console.error(`Error processing learner data: ${error.message}`);
+    return [];
+  }
+}
