@@ -111,3 +111,20 @@ function processSubmissions(submissions, assignmentMap) {
   return learners;
 }
  
+function formatResults(learners) {
+  const results = [];
+  for (const key in learners) {
+    const l = learners[key];
+    const formatted = {
+      id: l.id,
+      avg: l.totalPossible > 0 ? l.totalScore / l.totalPossible : 0
+    };
+    console.log(`\nLearner ${l.id}: avg = ${l.totalScore} / ${l.totalPossible} = ${formatted.avg}`);
+    for (const assignmentId in l.scores) {
+      formatted[assignmentId] = l.scores[assignmentId];
+      console.log(`  Assignment ${assignmentId}: ${l.scores[assignmentId].toFixed(4)}`);
+    }
+    results.push(formatted);
+  }
+  return results;
+}
