@@ -53,3 +53,61 @@ function isNotYetDue(assignment, now = new Date()) {
 function isLate(submission, assignment) {
   return new Date(submission.submitted_at) > new Date(assignment.due_at);
 }
+
+function processSubmissions(submissions, assignmentMap) {
+  const learners = {};
+ 
+  for (const entry of submissions) {
+    console.log(`\nSubmission: learner ${entry.learner_id}, assignment ${entry.assignment_id}`);
+    try {
+      const assignment = assignmentMap[entry.assignment_id];
+      if (!assignment) {
+        console.log("Skipped: assignment not found in map (unknown or invalid).");
+        continue;
+      }
+      if (isNotYetDue(assignment)) {
+        console.log(`Skipped: not due yet (due ${assignment.due_at}).`);
+        continue;
+      }
+ 
+      let score = Number(entry.submission.score);
+      if (isNaN(score)) {
+        console.warn(`Skipped: score "${entry.submission.score}" is not a number.`);
+        continue;
+      }
+      console.log(`Raw score: ${score} / ${assignment.points_possible}`);
+ 
+      if (isLate(entry.submission, assignment)) {
+        const penalty = assignment.points_possible * 0.1;
+        score -= penalty;
+        console.log(`LATE (submitted ${entry.submission.submitted_at}, due ${assignment.due_at}).`);
+        console.log(`Penalty: -${penalty} points → adjusted score: ${score}`);
+      } else {
+        console.log("On time — no penalty.");
+      }
+ 
+      if (!learners[entry.learner_id]) {
+        console.log(`  Creating new record for learner ${entry.learner_id}.`);
+        learners[entry.learner_id] = {
+          id: entry.learner_id,
+          totalScore: 0,
+          totalPossible: 0,
+          scores: {}
+        };
+      }
+ 
+      const learner = learners[entry.learner_id];
+      learner.totalScore += score;
+      learner.totalPossible += assignment.points_possible;
+      learner.scores[assignment.id] = score / assignment.points_possible;
+ 
+      console.log(`Percentage for assignment ${assignment.id}: ${score} / ${assignment.points_possible} = ${(score / assignment.points_possible).toFixed(4)}`);
+      console.log(`Running totals for learner ${learner.id}: ${learner.totalScore} earned / ${learner.totalPossible} possible`);
+    } catch (err) {
+      console.warn(`Skipped malformed submission: ${err.message}`);
+    }
+  }
+ 
+  return learners;
+}
+ 
