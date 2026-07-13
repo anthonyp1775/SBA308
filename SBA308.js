@@ -28,3 +28,22 @@ function validateCourseGroup(course, ag) {
   }
   console.log("Validation passed — the assignment group belongs to this course.");
 }
+
+
+function buildAssignmentMap(assignments) {
+  console.log("\n========== STEP 2: BUILD ASSIGNMENT MAP ==========");
+  const map = {};
+  for (const a of assignments) {
+    console.log(`\nProcessing assignment ${a.id}: "${a.name}"`);
+    const points = Number(a.points_possible);
+    if (isNaN(points) || points <= 0) {
+      console.warn(`  ✗ Skipped: invalid points_possible (${a.points_possible}).`);
+      continue;
+    }
+    map[a.id] = { ...a, points_possible: points };
+    console.log(`  ✓ Added to map: due ${a.due_at}, worth ${points} points.`);
+  }
+  console.log("\nFinal assignment map keys:", Object.keys(map));
+  return map;
+}
+ 
